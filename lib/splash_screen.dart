@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
-import 'package:module_c_taipei/welcome_screen.dart'; // Adjust path if needed
+import 'package:module_c_taipei/welcome_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -9,7 +9,6 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-// 1. ADD THE MIXIN: This is required for AnimationControllers
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
@@ -21,12 +20,11 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
 
-    // 2. SETUP THE CONTROLLER (Duration dictates how fast it rolls)
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(
         seconds: 2,
-      ), // 2 seconds feels smooth and intentional
+      ),
     );
 
     // 3. SETUP THE SLIDE (Starts 2.5x its own width to the left, ends at 0)
@@ -35,7 +33,6 @@ class _SplashScreenState extends State<SplashScreen>
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
-    // 4. SETUP THE ROTATION (Starts spun backward by 2 full circles, ends at 0)
     _rotateAnimation = Tween<double>(
       begin: -0.5,
       end: 0,
@@ -46,26 +43,23 @@ class _SplashScreenState extends State<SplashScreen>
       end: Alignment.centerRight,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
-    // 5. LISTEN FOR COMPLETION TO AUTO-NAVIGATE
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         _navigateToWelcome();
       }
     });
 
-    // Start the animation!
     _controller.forward();
   }
 
   @override
   void dispose() {
     _controller
-        .dispose(); // CRITICAL: Always dispose controllers to prevent memory leaks!
+        .dispose();
     super.dispose();
   }
 
   void _navigateToWelcome() {
-    // PRO-TIP: Use Get.off() for Splash Screens so the user can't press the Android "Back" button to return to it!
     Get.off(() => const WelcomeScreen());
   }
 
@@ -89,7 +83,6 @@ class _SplashScreenState extends State<SplashScreen>
         backgroundColor: Colors.transparent,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            // Stops the animation instantly and navigates
             _controller.stop();
             _navigateToWelcome();
           },
@@ -109,7 +102,6 @@ class _SplashScreenState extends State<SplashScreen>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // 6. WRAP THE LOGO IN THE TRANSITION WIDGETS
                   SlideTransition(
                     position: _slideAnimation,
                     child: RotationTransition(
